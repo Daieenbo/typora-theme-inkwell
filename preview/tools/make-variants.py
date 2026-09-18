@@ -1,14 +1,12 @@
-# 用已渲染好的三张变体预览, 拼成一张并排对照图 (纯像素拼接, 不依赖 iframe)
+# 由已渲染好的三张变体预览裁剪拼接出对照图。
+# 直接复用 preview-dark / preview-kraft / preview-sage.png, 因此字体与主预览图
+# 完全一致, 不需要再单独渲染一遍 (避免第二次渲染引入字体不确定性)。
 import os
-import re
 import struct
-import subprocess
 import zlib
 
-BASE = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # preview/
 THEME = os.path.dirname(BASE)
-EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-PROFILE = os.path.join(BASE, '_work', 'profile')
 
 MONO = {
     'a': ['01110', '10001', '11111', '10001', '10001'],
@@ -26,55 +24,24 @@ MONO = {
     't': ['01000', '11100', '01000', '01001', '00110'],
     'u': ['10001', '10001', '10001', '10011', '01101'],
     'w': ['10001', '10001', '10101', '10101', '01010'],
-    'M': ['10001', '11011', '10101', '10001', '10001'],
     '_': ['00000', '00000', '00000', '00000', '11111'],
     '-': ['00000', '00000', '11111', '00000', '00000'],
     '|': ['00100', '00100', '00100', '00100', '00100'],
-    '(': ['00110', '01000', '01000', '01000', '00110'],
-    ')': ['01100', '00010', '00010', '00010', '01100'],
     ' ': ['00000', '00000', '00000', '00000', '00000'],
 }
 
+# (源文件, 标签, 标签底色, 标签文字色)
 PANELS = [
-    ('inkwell.css', 'inkwell  |  dark', (0x20, 0x24, 0x2b), (0xe8, 0xec, 0xf2)),
-    ('inkwell-paper.css', 'inkwell-paper  |  kraft', (0xf1, 0xf1, 0xd6), (0x3b, 0x3b, 0x2c)),
-    ('inkwell-green.css', 'inkwell-green  |  sage', (0xee, 0xf3, 0xe9), (0x34, 0x3b, 0x30)),
+    ('preview-dark.png', 'inkwell  |  dark', (0x20, 0x24, 0x2b), (0xe8, 0xec, 0xf2)),
+    ('preview-kraft.png', 'inkwell-paper  |  kraft', (0xf1, 0xf1, 0xd6), (0x3b, 0x3b, 0x2c)),
+    ('preview-sage.png', 'inkwell-green  |  sage', (0xee, 0xf3, 0xe9), (0x34, 0x3b, 0x30)),
 ]
 
-
-def url(rel):
-    return 'file:///' + os.path.join(THEME, rel).replace('\\', '/').replace(' ', '%20')
-
-
-# 与 render-previews.ps1 一致: 页面内用 file:// 绝对路径声明字体并强制生效
-FORCE = ('<style>'
-         '@font-face{font-family:"PvBody";src:url("' + url('inkwell/Cantarell-VF-fixed.otf') + '")}'
-         '@font-face{font-family:"PvHan";src:url("' + url('inkwell/SourceHanSerifCN-Medium.ttf') + '");font-weight:400}'
-         '@font-face{font-family:"PvHan";src:url("' + url('inkwell/SourceHanSerifCN-Bold.ttf') + '");font-weight:700}'
-         '@font-face{font-family:"PvMono";src:url("' + url('inkwell/JetBrainsMono-Regular.ttf') + '")}'
-         'body,#write{font-family:"PvBody","PvHan",system-ui,sans-serif !important}'
-         'h1,h2,h3,h4,h5,h6{font-family:"PvHan","PvBody",serif !important}'
-         'code,tt,pre,.md-fences,.cm-s-inner,.CodeMirror,.CodeMirror-line,.CodeMirror-code,'
-         '.CodeMirror-sizer,.CodeMirror-lines,.CodeMirror-gutters,.CodeMirror-linenumber{'
-         'font-family:"PvMono",monospace !important}'
-         '</style>')
-
-PAGE = """<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
-<link rel="stylesheet" href="../__THEME_CSS__">""" + FORCE + """
-<style>html,body{margin:0;background:var(--bg-color)}
-#write{margin:0 auto;padding:16px 20px;font-size:15px;margin-bottom:0}
-h1{font-size:1.5rem !important;margin:0 0 .7rem !important}
-h2{font-size:1.15rem !important;margin:.5em 0 !important}</style>
-</head><body><div id="write">
-<h1>Inkwell</h1>
-<p>同一套版式, 三种纸面。中文思源宋体, latin Cantarell。</p>
-<h2>标题 Heading</h2>
-<p>正文与 <code>inline code</code> 混排, <strong>粗体</strong> 与 <a href="#">链接</a>。</p>
-<ul><li>列表项 <em>emphasis</em></li></ul>
-<pre class="md-fences" lang="javascript"><div class="CodeMirror cm-s-inner CodeMirror-wrap"><div class="CodeMirror-scroll"><div class="CodeMirror-sizer"><div class="CodeMirror-lines"><div class="CodeMirror-code"><pre class="CodeMirror-line"><span role="presentation"><span class="cm-comment">// comment 2 modes</span></span></pre><pre class="CodeMirror-line"><span role="presentation"><span class="cm-keyword">const</span> <span class="cm-variable">n</span> <span class="cm-operator">=</span> <span class="cm-number">42</span>;</span></pre><pre class="CodeMirror-line"><span role="presentation"><span class="cm-keyword">return</span> <span class="cm-string">"inkwell"</span>;</span></pre></div></div></div></div></div></pre>
-</div></body></html>"""
-
-W, H, LABEL_H = 560, 470, 34
+KEEP_W = 560          # 输出面板宽度 (统一)
+KEEP_H = 640          # 输出面板高度 (统一)
+LABEL_H = 34          # 顶部标签条高度
+CROP_FRAC_X = 0.88    # 各源图按同比例裁剪, 保证三个面板取景一致
+CROP_FRAC_Y = 0.72
 
 
 def read_png(path):
@@ -147,38 +114,35 @@ def draw_text(rows, text, x0, y0, scale, ink, total_w):
                             px, py = x0 + gx * scale + dx, y0 + gy * scale + dy
                             if 0 <= px < total_w and 0 <= py < len(rows):
                                 i = px * 3
-                                rows[py][i], rows[py][i + 1], rows[py][i + 2] = ink
+                                rows[py][i] = ink[0]
+                                rows[py][i + 1] = ink[1]
+                                rows[py][i + 2] = ink[2]
         x0 += 6 * scale
 
 
 cols = []
-for theme_css, label, page_bg, ink in PANELS:
-    page = os.path.join(BASE, '_v.html')
-    with open(page, 'w', encoding='utf-8') as fh:
-        # 用 replace 而不是 % 格式化: 字体 URL 里含 %20, 会与 % 格式化冲突
-        fh.write(PAGE.replace('__THEME_CSS__', theme_css))
-    shot = os.path.join(BASE, '_v.png')
-    subprocess.run([EDGE, '--headless=new', '--disable-gpu', '--hide-scrollbars',
-                    '--no-first-run', '--user-data-dir=' + PROFILE,
-                    '--window-size=%d,%d' % (W, H), '--force-device-scale-factor=1',
-                    '--virtual-time-budget=15000', '--screenshot=' + shot,
-                    'file:///' + page.replace('\\', '/')], capture_output=True)
-    w, h, bpp, px = read_png(shot)
-    rows = [bytearray(bytes(page_bg) * w) for _ in range(LABEL_H)]
-    for y in range(min(h, H)):
-        bi = y * w * bpp
+for src, label, page_bg, ink in PANELS:
+    w, h, bpp, px = read_png(os.path.join(BASE, src))
+    # 按同比例裁剪, 再缩放到统一尺寸 —— 三张源图分辨率不同, 固定像素裁剪会导致取景不一致
+    cw = int(w * CROP_FRAC_X)
+    ch = int(h * CROP_FRAC_Y)
+    x_off = (w - cw) // 2
+    y_off = int(h * 0.012)
+    rows = [bytearray(bytes(page_bg) * KEEP_W) for _ in range(LABEL_H)]
+    for oy in range(KEEP_H):
+        sy = y_off + min(ch - 1, int(oy * ch / KEEP_H))
+        bi = sy * w * bpp
         row = bytearray()
-        for x in range(w):
-            i = bi + x * bpp
+        for ox in range(KEEP_W):
+            sx = x_off + min(cw - 1, int(ox * cw / KEEP_W))
+            i = bi + sx * bpp
             row += bytes((px[i], px[i + 1], px[i + 2]))
         rows.append(row)
-    draw_text(rows, label, 14, 11, 2, ink, w)
+    draw_text(rows, label, 14, 11, 2, ink, KEEP_W)
     cols.append(rows)
-    os.remove(page)
-    os.remove(shot)
 
 out_h = min(len(c) for c in cols)
-out_w = W * len(cols)
+out_w = sum(len(c[0]) // 3 for c in cols)
 merged = [bytearray() for _ in range(out_h)]
 for rows in cols:
     for y in range(out_h):
