@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>dsh-blue 主题预览</title>
+<link rel="stylesheet" href="../inkwell.css">
+<style>
+  /* 仅用于浏览器预览: 模拟 Typora 编辑器外壳 */
+  html, body { margin: 0; padding: 0; background: var(--bg-color); }
+  #write { margin: 0 auto; }
+  .preview-banner {
+    max-width: 950px; margin: 24px auto 0; padding: 10px 16px;
+    font-family: var(--monospace); font-size: 13px; color: #9aa1ad;
+    background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="preview-banner">Inkwell · 预览页 (浏览器渲染, 用于核对配色 / 字体 / 代码块)</div>
+<div id="write">
+<h1>Inkwell 主题预览</h1>
+
+<p>这是一段正文示例, 用于核对<strong>思源宋体</strong>与 <strong>Cantarell</strong> 的混排效果。中文由思源宋体渲染, 拉丁字母与数字由 Cantarell 承担, 行内代码写作 <code>const theme = "inkwell"</code>, 等宽字体为 JetBrains Mono。链接示例: <a href="https://github.com/YiNNx/typora-theme-lapis">Typora Theme Lapis</a>。高亮示例: <mark>低明度蓝主色</mark>, 删除线 <del>已废弃</del>, 斜体 <em>emphasis</em>。</p>
+
+<p>引用块与代码块是本次设计的重点: 前者沿用 Lapis 的分隔式样, 后者采用 JetBrains New Dark 的 token 配色。</p>
+
+<h2>二级标题 (色块样式)</h2>
+
+<p>二级标题保持 Lapis 的行内色块设计, 底色改为低明度蓝 <code>#33507a</code>, 文字使用高对比浅色。</p>
+
+<h3>三级标题</h3>
+
+<p>正文行高 1.75, 中英混排基线对齐。数字 0123456789 与拉丁字符由 Cantarell 渲染。</p>
+
+<h4>四级标题</h4>
+<h5>五级标题</h5>
+<h6>六级标题</h6>
+
+<blockquote>
+<p>引用块示例: 左侧 3px 低明度蓝竖线, 背景为 <code>--quote-block-bg-color</code>。</p>
+<p>引用块中的第二个段落, 用于确认嵌套间距。</p>
+</blockquote>
+
+<hr>
+
+<h2>列表</h2>
+
+<ul>
+  <li>无序列表项一
+    <ul>
+      <li>嵌套列表项 (square)</li>
+    </ul>
+  </li>
+  <li>无序列表项二</li>
+</ul>
+
+<ol>
+  <li>有序列表项一</li>
+  <li>有序列表项二</li>
+</ol>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" checked> 已完成任务项</li>
+  <li class="task-list-item"><input type="checkbox"> 未完成任务项</li>
+</ul>
+
+<h2>表格</h2>
+
+<table>
+  <thead>
+    <tr><th>项目</th><th>取值</th><th>说明</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>主色</td><td>#4a6fa5</td><td>低明度蓝, 用于强调与标题</td></tr>
+    <tr><td>代码块底色</td><td>#191c22</td><td>比正文背景更深</td></tr>
+    <tr><td>正文字体</td><td>Cantarell + 思源宋体</td><td>拉丁 / 中文分工</td></tr>
+  </tbody>
+</table>
+
+<h2>代码块</h2>
+
+<p>下面按 JetBrains New Dark 的 token 配色渲染:</p>
+<pre class="md-fences md-end-block ty-contain-cm modeLoaded" lang="javascript"><div class="CodeMirror cm-s-inner CodeMirror-wrap"><div class="CodeMirror-scroll"><div class="CodeMirror-sizer"><div class="CodeMirror-lines"><div class="CodeMirror-code"><pre class="CodeMirror-line"><span role="presentation"><span class="cm-comment">// 计算斐波那契数列 (JetBrains New Dark)</span></span></pre><pre class="CodeMirror-line"><span role="presentation"><span class="cm-keyword">import</span> <span class="cm-variable">{ useMemo }</span> <span class="cm-keyword">from</span> <span class="cm-string">"react"</span>;</span></pre><pre class="CodeMirror-line"><span role="presentation"></span></pre><pre class="CodeMirror-line"><span role="presentation"><span class="cm-keyword">export</span> <span class="cm-keyword">function</span> <span class="cm-def">fibonacci</span>(<span class="cm-variable">n</span>) {</span></pre><pre class="CodeMirror-line"><span role="presentation">  <span class="cm-keyword">const</span> <span class="cm-variable">cache</span> <span class="cm-operator">=</span> <span class="cm-variable">useMemo</span>(() <span class="cm-operator">=&gt;</span> <span class="cm-variable">n</span> <span class="cm-operator">&lt;=</span> <span class="cm-number">1</span> ? <span class="cm-variable">n</span> : <span class="cm-number">0</span>, [<span class="cm-variable">n</span>]);</span></pre><pre class="CodeMirror-line"><span role="presentation">  <span class="cm-keyword">if</span> (<span class="cm-variable">n</span> <span class="cm-operator">&lt;=</span> <span class="cm-number">1</span>) <span class="cm-keyword">return</span> <span class="cm-variable">n</span>;</span></pre><pre class="CodeMirror-line"><span role="presentation">  <span class="cm-keyword">return</span> <span class="cm-def">fibonacci</span>(<span class="cm-variable">n</span> <span class="cm-operator">-</span> <span class="cm-number">1</span>) <span class="cm-operator">+</span> <span class="cm-def">fibonacci</span>(<span class="cm-variable">n</span> <span class="cm-operator">-</span> <span class="cm-number">2</span>);</span></pre><pre class="CodeMirror-line"><span role="presentation">}</span></pre><pre class="CodeMirror-line"><span role="presentation"></span></pre><pre class="CodeMirror-line"><span role="presentation"><span class="cm-comment">/* 注释 · 42 · 3.14 · null · true · "str" */</span></span></pre></div></div></div></div></div></pre><pre class="md-fences md-end-block ty-contain-cm modeLoaded" lang="css"><div class="CodeMirror cm-s-inner CodeMirror-wrap"><div class="CodeMirror-scroll"><div class="CodeMirror-sizer"><div class="CodeMirror-lines"><div class="CodeMirror-code"><pre class="CodeMirror-line"><span role="presentation"><span class="cm-comment">/* CSS 变量与选择器 */</span></span></pre><pre class="CodeMirror-line"><span role="presentation"><span class="cm-tag">:root</span> {</span></pre><pre class="CodeMirror-line"><span role="presentation">  <span class="cm-attribute">--primary-color</span>: <span class="cm-number">#4a6fa5</span>;</span></pre><pre class="CodeMirror-line"><span role="presentation">  <span class="cm-attribute">--font-family</span>: <span class="cm-string">"Cantarell"</span>, <span class="cm-string">"SourceHanSerifCN"</span>;</span></pre><pre class="CodeMirror-line"><span role="presentation">}</span></pre><pre class="CodeMirror-line"><span role="presentation"></span></pre><pre class="CodeMirror-line"><span role="presentation"><span class="cm-tag">#write</span> <span class="cm-tag">code</span> {</span></pre><pre class="CodeMirror-line"><span role="presentation">  <span class="cm-attribute">font-family</span>: <span class="cm-string">"JetBrainsMono"</span>;</span></pre><pre class="CodeMirror-line"><span role="presentation">}</span></pre></div></div></div></div></div></pre>
+<h2>分隔线</h2>
+
+<p>下方为 <code>---</code> 分隔线, 主题使用 2px 圆角实线而非默认浅色边框:</p>
+
+<hr>
+
+<h2>脚注与行内元素</h2>
+
+<p>脚注示例<sup class="md-footnote"><a href="#fn1" id="fnref1">[1]</a></sup>, 行内数学 <span class="md-inline-math">$E = mc^2$</span>。</p>
+
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>这是一条脚注内容, <code>.md-def-name</code> 使用主色, 脚注序号为行内代码底色。 <a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+<h2>结语</h2>
+
+<p>以上覆盖了 Typora 主题的主要元素。实际使用时, 将 <code>inkwell.css</code> 与 <code>inkwell/</code> 文件夹一起放入 Typora 主题目录即可。</p>
+</div>
+</body>
+</html>

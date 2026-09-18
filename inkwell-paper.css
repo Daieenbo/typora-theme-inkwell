@@ -1,0 +1,280 @@
+/*
+ * ============================================================================
+ *  Typora Theme : Inkwell · 护眼浅色 — 淡黄绿纸面 (Paper)
+ *  ---------------------------------------------------------------------------
+ *  本文件不重复任何排版 / 字体 / 语法规则, 只覆写颜色变量。
+ *  其余全部继承 inkwell.css (Lapis 版式 + JetBrains 代码配色)。
+ *
+ *  配色取向: 淡黄绿纸面, 模拟米黄稿纸, 长时间写作眩光更低。
+ *  色相 H≈60° (R=G>B), 明显偏黄绿而非偏红的暖米色 —— 暖米色 (H≈40°) 在
+ *  大屏上容易显粉红/发闷, 黄绿调更接近真实稿纸, 也更耐看。
+ *  文档正文文字色随背景翻转为深墨色, 侧边栏 / 菜单等 UI 文字同源跟随。
+ * ============================================================================
+ */
+
+@import "inkwell.css";
+
+:root {
+    /* ---- 纸面层次 (由浅到深) --------------------------------------------- */
+    --bg-color: #f1f1d6;
+    /* 正文纸面 (淡黄绿) */
+    --editor-bg-color: #eaeacd;
+    /* 编辑区外框 / 偏好设置 */
+    --side-bar-bg-color: #e7e7c8;
+    /* 侧边栏 */
+    --inline-code-bg-color: #d4d4a8;
+    /* 行内代码 chip (比代码块更深一档) */
+    --surface-color: #e9e9cd;
+    /* 面板 / 表格表头 */
+    --surface-hover-color: #e0e0c0;
+    /* 面板悬停 */
+    --panel-bg-color: #e5e5c6;
+    /* mega menu 斑马纹 */
+    --quote-block-bg-color: #eaeacb;
+    /* 引用块 / Front Matter */
+
+    /* ---- 代码块: 浅色面板 ------------------------------------------------ */
+    /* 与纸面同色系, 比页面深一档的嵌入式面板。
+       注意配套改了 token 取色 (见文件末尾): 深色版的 token 是为深底设计的,
+       放到浅底上对比度只剩 1.6~2.4:1, 必须整套换成浅底版本。 */
+    --block-bg-color: #e7e7c6;
+    /* 代码块浅色面板 */
+
+    /* ---- 行内代码 ————————————————————————————————————————————— */
+    /* 深色版的 --code-color (#b6c2d4) 是浅色, 放在浅色 chip 上只有约 1.4:1,
+       文字与底色糊成一片。这里改成深墨蓝: 既与正文墨色区分, 又保持"蓝色=代码"
+       的语义 (与 --primary-color 同色系), 对 chip 底达 6.15:1。 */
+    --code-color: #2c4a5c;
+    /* 行内代码文字 (深墨蓝) */
+
+    /* ---- 承载浅色文字的深色块 (保持深色, 形成纸面印章感) ----------------- */
+    --header-span-color: var(--primary-dim-color);
+    /* h2 色块 #33507a */
+
+    /* ---- 文档正文文字 ----------------------------------------------------- */
+    /* 深色版此值为 #dfe2e8 (浅色); 纸面上必须转为深墨色, 否则正文不可读。
+       #38382a 是同一色相 (H≈60°) 的深色版, 与纸面同温, 对比度 10.35:1。 */
+    --text-color: #38382a;
+    /* 正文墨色 (黄绿温) */
+
+    /* ---- 强调 / 次级文字 --------------------------------------------------- */
+    /* --text-color-strong 在深色版是近白 #f0f2f5, 纸面上只有 1.02:1。
+       它同时驱动 h2 色块文字、em、侧边栏选中项, 这里改为深墨色;
+       h2 色块是深色底, 其浅色文字在下面的 #write h2 规则里单独改回浅色。 */
+    --text-color-strong: #2b2b20;
+    /* del / 四级标题等用的次级色: 深色版 #9aa1ad 只有 2.27:1 */
+    --text-color-muted: #626876;
+    /* 六级标题 / 次要文字 (4.86:1) */
+
+    /* ---- 标题与链接的蓝色 -------------------------------------------------- */
+    /* 深色版的蓝 (--primary-bright-color #6e9bd1) 是为深底选的, 在纸面上
+       只有 2.52:1 —— 这是 h3~h5 标题发浅的根因。下面三支按同色相 (H≈211°)
+       整体加深, 覆盖标题、链接、粗体、引用块竖线、光标、行号:
+         --primary-bright-color  链接 / 次级标题     5.32 : 1
+         --primary-hover-color   粗体 / 链接悬停     6.54 : 1
+         --primary-color         h3~h5 / 竖线 / 光标 4.48 : 1
+       注意 --primary-dim-color 与 --primary-deep-color 保持原值不动: 前者是
+       h2 色块底色 (深底, 要保留), 后者作选中项底色 (浅底上衬托深字)。 */
+    --primary-bright-color: #3f6396;
+    --primary-hover-color: #345587;
+    --primary-color: #47709f;
+
+    /* ---- 选区 / 搜索命中 (浅色底上的蓝) ---------------------------------- */
+    --select-text-bg-color: rgba(74, 111, 165, 0.22);
+    --search-select-bg-color: rgba(74, 111, 165, 0.38);
+    --search-hit-bg-color: rgba(74, 111, 165, 0.22);
+
+    /* ---- 边框 (同色相深色版, 避免冷暖割裂) ------------------------------- */
+    --border-color: #d5d5b0;
+    --border-color-strong: #c4c49e;
+    --hr-color: #d5d5b0;
+    --scrollbar-thumb-color: #c9c9a8;
+    --scrollbar-thumb-hover-color: #b6b690;
+
+    /* ---- 杂项 ------------------------------------------------------------- */
+    --img-shadow-color: rgba(120, 120, 60, 0.18);
+    --md-char-color: rgba(122, 132, 148, 0.75);
+    --mermaid-theme: neutral;
+}
+
+/* 标题取色显式落到 h1~h6, 避免依赖变量链 (深色版的浅色标题在纸面上会发白)。
+   h1 用墨色, h2 是深色块 + 浅字, h3~h5 用加深的蓝, h6 用加深的次级色。 */
+#write h1 {
+    color: var(--text-color-strong);
+}
+
+#write h3,
+#write h4,
+#write h5 {
+    color: var(--primary-color);
+}
+
+#write h6 {
+    color: var(--text-color-muted);
+}
+
+/* h2 色块底色是深蓝 (#33507a), 文字必须回到浅色; 色块内的链接与代码同步。
+   对比度 7.29:1。 */
+#write h2,
+#write h2 a,
+#write h2 code,
+#write h2 strong,
+#write h2 del,
+#write h2 script {
+    color: #f0f2f5;
+}
+
+/* 外层 fence 底色由 inkwell.css 的 .md-fences 规则写死为深色版取值,
+   这里跟随 --block-bg-color, 让代码面板与纸面同色系。 */
+.md-fences {
+    background-color: var(--block-bg-color);
+    border-color: #cbcb9e;
+}
+
+/* CodeMirror 内层同步用面板色 (深色版是 --block-bg-color, 会跟不过来) */
+.cm-s-inner.CodeMirror {
+    background-color: var(--block-bg-color);
+    border-color: #cbcb9e;
+}
+
+.CodeMirror-gutters {
+    border-right-color: #cbcb9e;
+}
+
+.CodeMirror-linenumber {
+    color: #a6a678;
+}
+
+.CodeMirror-activeline-background {
+    background: rgba(74, 111, 165, 0.07);
+}
+
+.cm-s-inner div.CodeMirror-selected,
+.cm-s-inner.CodeMirror-focused div.CodeMirror-selected {
+    background: rgba(74, 111, 165, 0.26) !important;
+}
+
+.cm-searching {
+    background: rgba(74, 111, 165, 0.28);
+}
+
+/* 行内代码 chip 的描边: 深色版的 --border-color 在浅黄绿底上偏淡,
+   单独给 chip 一条更实的边, 让"这是个代码块"一眼可辨。 */
+#write code,
+#write tt {
+    border-color: #c9c9a0;
+}
+
+/* 纸面上不需要深色版给图片用的重投影 */
+#write p>.md-image:only-child:not(.md-img-error) img,
+#write p>img:only-child {
+    filter: drop-shadow(0 6px 10px var(--img-shadow-color));
+}
+
+pre.md-meta-block {
+    filter: drop-shadow(0 3px 4px var(--img-shadow-color));
+}
+
+/* ==高亮==: 深色版的 mark 底色 (半透明黄) 直接搬到浅色底上几乎不可见,
+   这里换成纸面上的荧光笔色; 文字沿用正文墨色, 不再继承深色版的浅色。 */
+mark {
+    background: rgba(233, 214, 96, 0.60);
+    color: var(--text-color);
+}
+
+/* ---------------------------------------------------------------------------
+ *  代码块 token 前景色 — 换成浅底版本
+ *  ---------------------------------------------------------------------------
+ *  inkwell.css 用的是 JetBrains New Dark 的 token 取色, 那是为深底设计的:
+ *  放到浅色代码块上对比度只有 1.6~2.4:1, 等于看不见, 所以这里整套换成
+ *  JetBrains New Light (IntelliJ Light) 的对应取色, 并对偏亮的两支做了加深:
+ *    - 注释 #8c8c8c → #666646   (2.88:1 → 4.6:1)
+ *    - 标签 #9e880d → #70600a   (2.99:1 → 4.8:1)
+ *    - 非法 #d1242f → #b81f1c
+ *  全部 token 对代码块底色 >= 4.5:1, 最差一支 4.55:1。
+ * ------------------------------------------------------------------------ */
+
+.cm-s-inner .cm-comment,
+.cm-s-inner.cm-comment,
+.cm-comment {
+    color: #666646 !important;
+    font-style: italic;
+}
+
+.cm-s-inner .cm-keyword,
+.cm-s-inner .cm-atom,
+.cm-keyword,
+.cm-atom {
+    color: #0033b3 !important;
+}
+
+.cm-s-inner .cm-number,
+.cm-number {
+    color: #1750eb !important;
+}
+
+.cm-s-inner .cm-def,
+.cm-def {
+    color: #00627a !important;
+}
+
+.cm-s-inner .cm-string,
+.cm-s-inner .cm-string-2,
+.cm-string,
+.cm-string-2 {
+    color: #12701f !important;
+}
+
+.cm-s-inner .cm-tag,
+.cm-s-inner .cm-attribute,
+.cm-tag,
+.cm-attribute {
+    color: #70600a !important;
+}
+
+.cm-s-inner .cm-variable-2,
+.cm-s-inner .cm-type,
+.cm-s-inner .cm-qualifier,
+.cm-s-inner .cm-variable-3,
+.cm-s-inner .cm-builtin,
+.cm-s-inner .cm-meta,
+.cm-variable-2,
+.cm-type,
+.cm-qualifier,
+.cm-variable-3,
+.cm-builtin,
+.cm-meta {
+    color: #7a3e9d !important;
+}
+
+.cm-s-inner .cm-variable,
+.cm-s-inner .cm-property,
+.cm-variable,
+.cm-property {
+    color: #3a3a2e !important;
+}
+
+.cm-s-inner .cm-operator,
+.cm-s-inner .cm-bracket,
+.cm-operator,
+.cm-bracket {
+    color: #3a3a2e !important;
+}
+
+.cm-s-inner .cm-link,
+.cm-link {
+    color: #0f5aa8 !important;
+}
+
+.cm-s-inner .cm-error,
+.cm-s-inner .cm-invalidchar,
+.cm-error,
+.cm-invalidchar {
+    color: #b81f1c !important;
+}
+
+.cm-s-inner .cm-error,
+.cm-error {
+    background-color: rgba(184, 31, 28, 0.10) !important;
+}
+

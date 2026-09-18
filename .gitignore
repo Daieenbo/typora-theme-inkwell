@@ -1,0 +1,22 @@
+# 打包产物：不进仓库, 改为 GitHub Release 附件
+#   (仓库放可重建的源文件; zip 每次构建都会变, 提交进 git 只会让历史线性膨胀)
+*.zip
+typora-theme-inkwell.zip
+
+# 预览渲染的临时工作目录
+preview/_work/
+preview/tools/_work/
+
+# 渲染调试用临时文件 (由 tools/render-previews.ps1 生成)
+preview/_*.html
+preview/_*.png
+preview/tools/_*
+
+# 系统 / 编辑器垃圾
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/

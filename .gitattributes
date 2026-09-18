@@ -1,0 +1,21 @@
+# 统一换行: 文本按仓库约定存取, Windows/Mac 协作不会整文件 diff
+* text=auto eol=lf
+
+# Windows 脚本保持 CRLF, 否则 .bat 在某些环境下会出问题
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 字体与图片按二进制处理, 不做换行转换, 也不参与文本 diff
+*.ttf  binary
+*.otf  binary
+*.woff binary
+*.woff2 binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+
+# GitHub 语言统计: 不要让字体把仓库标成二进制仓库
+*.ttf  linguist-vendored
+*.otf  linguist-vendored
